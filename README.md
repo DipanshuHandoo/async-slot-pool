@@ -46,7 +46,7 @@ CommonJS consumers can use `require('@dipanshuhandoo/async-slot-pool/min')`. Bro
 After publication, use a version-pinned CDN URL, substituting the actual released version:
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@dipanshuhandoo/async-slot-pool@1.0.0/dist/workerPool.global.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dipanshuhandoo/async-slot-pool@1.0.1/dist/workerPool.global.min.js"></script>
 <script>
   AsyncSlotPool.workerPool([1, 2, 3], (item) => item * 2).then(console.log);
 </script>
@@ -65,6 +65,16 @@ const result = await workerPool([1, 2], async (item) => String(item), options);
 ```
 
 Declarations support modern NodeNext/Node16 and bundler module resolution, with separate CommonJS declarations. They infer input and awaited result types.
+
+## Runnable Examples
+
+See the [examples guide](examples/README.md) for eight complete use cases: batch calculations, HTTP requests, file processing, retries and timeouts, lazy records with progress, bail mode, and two service-upload examples with stdout progress. All examples run locally without credentials or external services and include result assertions.
+
+From a repository checkout, run `npm run examples` to build and check them all. The examples are also included in the npm package; after installing it in a consumer project, run an individual example:
+
+```sh
+node node_modules/@dipanshuhandoo/async-slot-pool/examples/http-api.mjs
+```
 
 ## Options
 
@@ -100,6 +110,7 @@ See the [API reference](docs/workerPool.md) for detailed examples and [release g
 npm ci
 npx playwright install chromium
 npm test
+npm run examples
 npm run test:types
 npm run test:package
 npm run verify
@@ -107,7 +118,7 @@ npm run pack:check
 npm run publish:dry
 ```
 
-`npm run build` produces readable and minified ESM, CommonJS, browser scripts, source maps, and declarations in `dist/`. Only development tooling has dependencies. `npm run verify` checks source behavior and the installed tarball, including real Chromium execution. Linux CI may need `npx playwright install --with-deps chromium`.
+`npm run build` produces readable and minified ESM, CommonJS, browser scripts, source maps, and declarations in `dist/`. Only development tooling has dependencies. `npm run verify` checks source behavior, the runnable examples, and the installed tarball, including real Chromium execution. Installed-tarball checks also run the packaged examples. Linux CI may need `npx playwright install --with-deps chromium`.
 
 Public publishing is deliberately manual: `npm run publish:public`. It runs release verification first and requires npm authentication, scope permissions, and current registry security requirements. Do not publish until the release guide's checklist is complete.
 

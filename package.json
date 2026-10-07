@@ -1,6 +1,6 @@
 {
   "name": "@dipanshuhandoo/async-slot-pool",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Dependency-free async task pool with bounded concurrency, retries, timeouts, lazy iterable input, and progress callbacks.",
   "license": "MIT",
   "author": "DipanshuHandoo",
@@ -54,6 +54,7 @@
   "jsdelivr": "./dist/workerPool.global.min.js",
   "files": [
     "dist",
+    "examples",
     "README.md",
     "LICENSE"
   ],
@@ -67,6 +68,7 @@
   "scripts": {
     "build": "node scripts/build.mjs",
     "test": "node --test test/workerPool.test.js",
+    "examples": "node scripts/run-examples.mjs",
     "test:types": "npm run build && tsc --noEmit --strict --module nodenext --target es2022 test/types/consumer.mts test/types/consumer.cts",
     "test:package": "node scripts/check-package.mjs",
     "verify": "node scripts/verify.mjs",

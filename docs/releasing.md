@@ -31,7 +31,7 @@ A genuine package-not-found response may be expected before the first release, b
 
 ## Prepare the Version
 
-The initial manifest targets `1.0.0`. Review `CHANGELOG.md` and commit the intended release changes yourself. No implementation command in this repository creates a git commit or tag automatically.
+The manifest targets the upcoming `1.0.1` release. Confirm that the intended version is not already published, review `CHANGELOG.md`, and commit the intended release changes yourself. No implementation command in this repository creates a git commit or tag automatically.
 
 For later releases, update the changelog and select the next semantic version:
 
@@ -49,9 +49,9 @@ npm run pack:check
 npm run publish:dry
 ```
 
-`verify` builds, runs source tests, checks ESM and CommonJS declarations, creates a real tarball, installs it into a temporary consumer project, checks public exports and TypeScript resolution, and runs browser-bundler and global-script checks in Chromium. Both readable and minified builds are exercised. Temporary artifacts are removed.
+`verify` builds, runs source tests and examples, checks ESM and CommonJS declarations, creates a real tarball, installs it into a temporary consumer project, runs the packaged examples, checks public exports and TypeScript resolution, and runs browser-bundler and global-script checks in Chromium. Both readable and minified builds are exercised. Temporary artifacts are removed.
 
-`pack:check` checks the exact published file allowlist and prints tarball contents and size. The package contains only its manifest, README, MIT license, six JavaScript builds with maps, and two declaration files. Source maps embed source text; review it as public content. Development tooling and the development lockfile are not included.
+`pack:check` checks the exact published file allowlist and prints tarball contents and size. The package contains only its manifest, README, MIT license, six JavaScript builds with maps, two declaration files, and eight example scripts with their guide. Source maps embed source text; review it as public content. Development tooling and the development lockfile are not included.
 
 `publish:dry` invokes npm's publication dry run and release lifecycle checks, but uploads nothing. Verification still creates and installs a local temporary tarball: it overrides inherited dry-run settings for those local commands only. A successful dry run is not proof of authentication, name availability, or publish permission.
 
@@ -75,10 +75,10 @@ Check the registry metadata:
 npm view @dipanshuhandoo/async-slot-pool version dist.integrity --registry https://registry.npmjs.org/
 ```
 
-In a separate temporary consumer project, install the exact released version and exercise both formats. Substitute the actual version if it is not `1.0.0`:
+In a separate temporary consumer project, install the exact released version and exercise both formats. Substitute the actual version if it is not `1.0.1`:
 
 ```sh
-npm install @dipanshuhandoo/async-slot-pool@1.0.0 --registry https://registry.npmjs.org/
+npm install @dipanshuhandoo/async-slot-pool@1.0.1 --registry https://registry.npmjs.org/
 node --input-type=module -e "import { workerPool } from '@dipanshuhandoo/async-slot-pool'; console.log(await workerPool([1], value => value + 1))"
 node -e "const { workerPool } = require('@dipanshuhandoo/async-slot-pool'); workerPool([1], value => value + 1).then(console.log)"
 ```

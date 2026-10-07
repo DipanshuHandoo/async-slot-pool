@@ -14,8 +14,13 @@ const filenames = [
   'workerPool.js', 'workerPool.min.js', 'workerPool.cjs', 'workerPool.min.cjs',
   'workerPool.global.js', 'workerPool.global.min.js',
 ];
+const exampleFilenames = [
+  'basic.mjs', 'http-api.mjs', 'files.mjs', 'retries-timeouts.mjs', 'lazy-progress.mjs', 'bail.mjs',
+  'service-upload-progress.mjs', 'service-lazy-progress.mjs',
+];
 const expectedFiles = [
   'package.json', 'README.md', 'LICENSE', 'dist/workerPool.d.ts', 'dist/workerPool.d.cts',
+  'examples/README.md', ...exampleFilenames.map((filename) => `examples/${filename}`),
   ...filenames.flatMap((name) => [`dist/${name}`, `dist/${name}.map`]),
 ].sort();
 
@@ -65,6 +70,9 @@ try {
     await mkdir(consumer);
     await writeFile(path.join(consumer, 'package.json'), JSON.stringify({ private: true, type: 'module' }));
     run('npm', ['install', path.join(temporary, packed.filename), '--dry-run=false', '--ignore-scripts', '--no-package-lock', '--no-audit', '--no-fund'], { cwd: consumer });
+    run(process.execPath, [
+      '--test', ...exampleFilenames.map((filename) => path.join(consumer, 'node_modules', metadata.name, 'examples', filename)),
+    ], { cwd: consumer });
     const name = JSON.stringify(metadata.name);
     for (const subpath of ['', '/min']) {
       const specifier = JSON.stringify(metadata.name + subpath);
