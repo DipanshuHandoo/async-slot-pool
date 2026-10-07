@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { setTimeout as delay } from 'node:timers/promises';
-import { workerPool } from '@dipanshuhandoo/async-slot-pool';
+import { asyncSlotPool as workerPool } from '@dipanshuhandoo/async-slot-pool';
 
 class DemoUploadService {
   async uploadFile(relativePath) {
@@ -8,11 +8,11 @@ class DemoUploadService {
     return { relativePath, status: 'uploaded' };
   }
 
-  async uploadFiles(relativePaths, workerPoolOptions = {}) {
+  async uploadFiles(relativePaths, asyncSlotPoolOptions = {}) {
     return workerPool(
       relativePaths,
       (relativePath) => this.uploadFile(relativePath),
-      workerPoolOptions,
+      asyncSlotPoolOptions,
     );
   }
 }

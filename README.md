@@ -13,9 +13,9 @@ Requires Node.js 22+ or a modern browser. TypeScript declarations are included. 
 ## ESM and Browser Bundlers
 
 ```js
-import { workerPool } from '@dipanshuhandoo/async-slot-pool';
+import { asyncSlotPool } from '@dipanshuhandoo/async-slot-pool';
 
-const { succeeded, failed, stats } = await workerPool(
+const { succeeded, failed, stats } = await asyncSlotPool(
   ['https://example.com/a', 'https://example.com/b'],
   async (url) => {
     const response = await fetch(url);
@@ -29,38 +29,52 @@ const { succeeded, failed, stats } = await workerPool(
 ## CommonJS
 
 ```js
-const { workerPool } = require('@dipanshuhandoo/async-slot-pool');
-workerPool([1, 2, 3], (item) => item * 2).then(console.log);
+const { asyncSlotPool } = require('@dipanshuhandoo/async-slot-pool');
+asyncSlotPool([1, 2, 3], (item) => item * 2).then(console.log);
 ```
 
 ## Minified Imports
 
 ```js
-import { workerPool } from '@dipanshuhandoo/async-slot-pool/min';
+import { asyncSlotPool } from '@dipanshuhandoo/async-slot-pool/min';
 ```
 
 CommonJS consumers can use `require('@dipanshuhandoo/async-slot-pool/min')`. Browser bundlers can use either entry; bundlers typically perform their own production minification.
+
+## Naming Compatibility
+
+`asyncSlotPool` is the canonical function. Existing applications may still import `workerPool`; it is an alias of the same function, not a second implementation. The handler signature, options, callbacks, and results are unchanged. `AsyncSlotPoolOptions` and `AsyncSlotPoolResult` are the canonical types; `WorkerPoolOptions` and `WorkerPoolResult` remain compatibility aliases.
+
+Local names are your choice:
+
+```js
+import { asyncSlotPool as workerPool } from '@dipanshuhandoo/async-slot-pool';
+```
+
+Browser scripts expose `AsyncSlotPool.asyncSlotPool` and retain `AsyncSlotPool.workerPool`. Existing `dist/workerPool.*` filenames remain available for published CDN links; new examples and package entries use `dist/asyncSlotPool.*`. The old repository source path re-exports the canonical implementation.
+
+Validation errors now start with `asyncSlotPool:` instead of `workerPool:`. Update any application checks that match the old message prefix. Error classes and validation rules are unchanged.
 
 ## Direct Browser Script
 
 After publication, use a version-pinned CDN URL, substituting the actual released version:
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@dipanshuhandoo/async-slot-pool@1.0.1/dist/workerPool.global.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dipanshuhandoo/async-slot-pool@1.0.1/dist/asyncSlotPool.global.min.js"></script>
 <script>
-  AsyncSlotPool.workerPool([1, 2, 3], (item) => item * 2).then(console.log);
+  AsyncSlotPool.asyncSlotPool([1, 2, 3], (item) => item * 2).then(console.log);
 </script>
 ```
 
-The readable browser build is `dist/workerPool.global.js`. Browser script builds expose `AsyncSlotPool.workerPool`. No Node.js polyfills are required; your handler's APIs must still exist in its runtime.
+The readable browser build is `dist/asyncSlotPool.global.js`. Browser script builds expose `AsyncSlotPool.asyncSlotPool`. No Node.js polyfills are required; your handler's APIs must still exist in its runtime.
 
 ## TypeScript
 
 ```ts
-import { workerPool, type WorkerPoolOptions } from '@dipanshuhandoo/async-slot-pool';
+import { asyncSlotPool, type AsyncSlotPoolOptions } from '@dipanshuhandoo/async-slot-pool';
 
-const options: WorkerPoolOptions<number> = { concurrency: 2 };
-const result = await workerPool([1, 2], async (item) => String(item), options);
+const options: AsyncSlotPoolOptions<number> = { concurrency: 2 };
+const result = await asyncSlotPool([1, 2], async (item) => String(item), options);
 // result.succeeded contains TaskSuccess<number, string> entries.
 ```
 
@@ -102,7 +116,7 @@ Results contain `succeeded`, `failed`, and `stats`. Both result arrays are compa
 - Iterator errors reject the pool promise. Other claimed tasks are not cancelled. Early termination does not call the iterator's `return()`; manage resource-owning iterators explicitly.
 - Concurrency does not enforce a requests-per-second rate limit.
 
-See the [API reference](docs/workerPool.md) for detailed examples and [release guide](docs/releasing.md) for publishing instructions. The reference is maintained in the repository, not included in the npm tarball.
+See the [API reference](docs/asyncSlotPool.md) for detailed examples and [release guide](docs/releasing.md) for publishing instructions. The reference is maintained in the repository, not included in the npm tarball.
 
 ## Development
 

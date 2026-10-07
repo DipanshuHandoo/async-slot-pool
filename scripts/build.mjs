@@ -13,8 +13,8 @@ for (const format of ['esm', 'cjs', 'iife']) {
     const extension = format === 'cjs' ? 'cjs' : 'js';
     await build({
       absWorkingDir: root,
-      entryPoints: ['src/workerPool.js'],
-      outfile: `dist/workerPool${suffix}${minify ? '.min' : ''}.${extension}`,
+      entryPoints: ['src/asyncSlotPool.js'],
+      outfile: `dist/asyncSlotPool${suffix}${minify ? '.min' : ''}.${extension}`,
       bundle: true,
       format,
       platform: format === 'cjs' ? 'node' : 'browser',
@@ -25,10 +25,15 @@ for (const format of ['esm', 'cjs', 'iife']) {
       legalComments: 'none',
       logLevel: 'warning',
     });
+    const filename = `asyncSlotPool${suffix}${minify ? '.min' : ''}.${extension}`;
+    const legacyFilename = filename.replace('asyncSlotPool', 'workerPool');
+    await copyFile(new URL(filename, dist), new URL(legacyFilename, dist));
+    await copyFile(new URL(`${filename}.map`, dist), new URL(`${legacyFilename}.map`, dist));
   }
 }
 
 for (const extension of ['d.ts', 'd.cts']) {
-  await copyFile(new URL('../types/workerPool.d.ts', import.meta.url), new URL(`workerPool.${extension}`, dist));
+  await copyFile(new URL('../types/asyncSlotPool.d.ts', import.meta.url), new URL(`asyncSlotPool.${extension}`, dist));
+  await copyFile(new URL(`asyncSlotPool.${extension}`, dist), new URL(`workerPool.${extension}`, dist));
 }
 console.log('Built ESM, CommonJS, browser scripts, source maps, and declarations.');

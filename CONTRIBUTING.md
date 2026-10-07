@@ -14,7 +14,7 @@ Node.js 22+ is required for development. CI checks supported Node.js majors on W
 
 ## Changes
 
-Keep changes focused and add regression tests in `test/workerPool.test.js` for scheduler behavior. Update `types/workerPool.d.ts` and the type fixtures if the public API changes. Update the README, API reference, and changelog when behavior or support changes.
+Keep changes focused and add regression tests in `test/asyncSlotPool.test.js` for scheduler behavior. Update `types/asyncSlotPool.d.ts` and the type fixtures if the public API changes. Update the README, API reference, and changelog when behavior or support changes.
 
 Generated `dist/` files are not committed; rebuild them with `npm run build`. Commit development dependency changes together with `package-lock.json`. Do not add runtime dependencies without discussing the tradeoff.
 

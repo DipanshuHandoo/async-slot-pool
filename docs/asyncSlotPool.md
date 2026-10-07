@@ -1,4 +1,4 @@
-# Worker Pool
+# Async Slot Pool
 
 Controlled parallel execution for any async operation. Processes a collection of items with a fixed number of concurrent workers — as soon as one finishes, it picks the next item from the queue.
 
@@ -11,15 +11,17 @@ Solves the two extremes:
 ## Import
 
 ```js
-import { workerPool } from '@dipanshuhandoo/async-slot-pool';
+import { asyncSlotPool } from '@dipanshuhandoo/async-slot-pool';
 ```
+
+The existing `workerPool` export is retained as an identical compatibility alias. Local code may use `import { asyncSlotPool as workerPool }` without changing its call sites. Validation message prefixes now use `asyncSlotPool:`; error classes, arguments, options, callbacks, and results are unchanged.
 
 ---
 
 ## Signature
 
 ```js
-const { succeeded, failed, stats } = await workerPool(items, handler, options);
+const { succeeded, failed, stats } = await asyncSlotPool(items, handler, options);
 ```
 
 | Parameter | Type | Description |
@@ -82,7 +84,7 @@ Invalid option values reject the returned promise with a clear error message bef
 ### Basic — process an array
 
 ```js
-const { succeeded, failed, stats } = await workerPool(
+const { succeeded, failed, stats } = await asyncSlotPool(
   users,
   async (user, index) => generateUserReport(user),
   { concurrency: 20 }
@@ -96,7 +98,7 @@ console.log(`${stats.succeeded} done, ${stats.failed} failed in ${stats.duration
 ### With retries and timeout
 
 ```js
-const { succeeded, failed } = await workerPool(
+const { succeeded, failed } = await asyncSlotPool(
   orderIds,
   async (id) => fetchOrderDetails(id),
   {
@@ -120,7 +122,7 @@ for (const f of failed) {
 `failed[]` gives you errors at the end. `onTaskError` fires on every failure or retry attempt as it happens — useful for logging, alerting, or updating a status record without waiting for the pool to finish.
 
 ```js
-const { succeeded, failed } = await workerPool(
+const { succeeded, failed } = await asyncSlotPool(
   records,
   async (record) => processRecord(record),
   {
@@ -160,7 +162,7 @@ const { succeeded, failed } = await workerPool(
 Without jitter, all workers that hit the same rate limit error will retry at exactly the same intervals — potentially hammering the service again in sync. `retryJitter` spreads the retries out randomly.
 
 ```js
-const { succeeded, failed } = await workerPool(
+const { succeeded, failed } = await asyncSlotPool(
   items,
   async (item) => callExternalApi(item),
   {
@@ -181,7 +183,7 @@ const { succeeded, failed } = await workerPool(
 ### Stop on first failure (bail mode)
 
 ```js
-const { succeeded, failed, stats } = await workerPool(
+const { succeeded, failed, stats } = await asyncSlotPool(
   steps,
   async (step) => executeStep(step),
   {
@@ -200,7 +202,7 @@ if (stats.aborted) {
 ### Progress tracking
 
 ```js
-const { succeeded } = await workerPool(
+const { succeeded } = await asyncSlotPool(
   rows,
   async (row) => processRow(row),
   {
@@ -235,7 +237,7 @@ function* idRange(from, to) {
   for (let i = from; i <= to; i++) yield i;
 }
 
-const { succeeded, stats } = await workerPool(
+const { succeeded, stats } = await asyncSlotPool(
   idRange(1, 100_000),
   async (id) => db.findUser(id),
   { concurrency: 30 }
@@ -248,10 +250,10 @@ Any sync iterable works:
 
 ```js
 // Set
-await workerPool(new Set(ids), handler, { concurrency: 10 });
+await asyncSlotPool(new Set(ids), handler, { concurrency: 10 });
 
 // Map values
-await workerPool(recordMap.values(), handler, { concurrency: 10 });
+await asyncSlotPool(recordMap.values(), handler, { concurrency: 10 });
 ```
 
 > **Async generators** (`async function*`) are not supported directly. Collect them first with `for await`:
@@ -259,7 +261,7 @@ await workerPool(recordMap.values(), handler, { concurrency: 10 });
 > ```js
 > const items = [];
 > for await (const item of asyncGenerator()) items.push(item);
-> await workerPool(items, handler, { concurrency: 10 });
+> await asyncSlotPool(items, handler, { concurrency: 10 });
 > ```
 
 ---
@@ -269,7 +271,7 @@ await workerPool(recordMap.values(), handler, { concurrency: 10 });
 The handler does not need to be `async`. Sync functions are wrapped transparently:
 
 ```js
-const { succeeded } = await workerPool(
+const { succeeded } = await asyncSlotPool(
   rawRecords,
   (record) => ({ ...record, normalized: normalize(record.value) }), // sync — no async/await needed
   { concurrency: 100 }
@@ -281,7 +283,7 @@ const { succeeded } = await workerPool(
 ### Generate Excel files in parallel
 
 ```js
-const { succeeded, failed } = await workerPool(
+const { succeeded, failed } = await asyncSlotPool(
   tenants,
   async (tenant) => generateReport(tenant.id),
   {
@@ -298,7 +300,7 @@ const { succeeded, failed } = await workerPool(
 ### Transform a large array
 
 ```js
-const { succeeded } = await workerPool(
+const { succeeded } = await asyncSlotPool(
   rawRecords,
   async (record) => transform(record),
   { concurrency: 100 }
@@ -328,7 +330,7 @@ Start conservative and increase until you see diminishing returns or downstream 
 Each task runs independently. A failure in one task does not affect others (unless `bail: true`).
 
 ```js
-const { succeeded, failed } = await workerPool(items, handler, { retries: 2 });
+const { succeeded, failed } = await asyncSlotPool(items, handler, { retries: 2 });
 
 const results = succeeded.map((s) => s.result);
 
@@ -346,10 +348,10 @@ If the handler throws synchronously, it is caught and treated the same as an asy
 Bad options reject the returned promise before any work starts with a descriptive error. Use `await` with `try/catch` or attach a rejection handler:
 
 ```
-RangeError: workerPool: 'concurrency' must be a positive integer, got 0
-RangeError: workerPool: 'timeout' must be a non-negative number, got -1
-TypeError:  workerPool: 'onProgress' must be a function or null
-TypeError:  workerPool: 'items' must be an Array or a sync Iterable
+RangeError: asyncSlotPool: 'concurrency' must be a positive integer, got 0
+RangeError: asyncSlotPool: 'timeout' must be a non-negative number, got -1
+TypeError:  asyncSlotPool: 'onProgress' must be a function or null
+TypeError:  asyncSlotPool: 'items' must be an Array or a sync Iterable
 ```
 
 `retryJitter` is the exception — invalid values are silently normalised rather than throwing:

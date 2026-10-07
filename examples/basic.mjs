@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { workerPool } from '@dipanshuhandoo/async-slot-pool';
+import { asyncSlotPool as workerPool } from '@dipanshuhandoo/async-slot-pool';
 
 const orders = [
   { id: 'order-1', quantity: 2, unitPrice: 15 },

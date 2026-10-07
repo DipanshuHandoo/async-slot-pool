@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+- Make `asyncSlotPool` the canonical function and align source, declarations, builds, and documentation with Async Slot Pool naming.
+- Retain `workerPool`, legacy public types, the old source import path, browser globals, and distribution filenames for compatibility.
+- Use `asyncSlotPool:` in validation diagnostics without changing error classes or validation rules.
+- Update examples to import the canonical function using their existing local variable name.
+- Verify both canonical and legacy names in source, TypeScript, installed-package, and browser checks.
+
 ## 1.0.1 (Unreleased)
 
 - Add six runnable examples for batch transformations, local HTTP requests, file processing, retries and timeouts, lazy iterable progress, and bail mode.

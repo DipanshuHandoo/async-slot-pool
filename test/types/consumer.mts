@@ -1,12 +1,15 @@
-import { workerPool, type WorkerPoolOptions, type WorkerPoolResult } from '@dipanshuhandoo/async-slot-pool';
-import { workerPool as minified } from '@dipanshuhandoo/async-slot-pool/min';
+import { asyncSlotPool, workerPool, type AsyncSlotPoolOptions, type AsyncSlotPoolResult, type WorkerPoolOptions, type WorkerPoolResult } from '@dipanshuhandoo/async-slot-pool';
+import { asyncSlotPool as minified } from '@dipanshuhandoo/async-slot-pool/min';
 
-const options: WorkerPoolOptions<number> = {
+const options: AsyncSlotPoolOptions<number> = {
   concurrency: 2,
   onProgress: async (stats) => { const pending: number | null = stats.pending; void pending; },
   onTaskError: ({ item, error }) => { const value: number = item; const message: string = error; void value; void message; },
 };
-const result: WorkerPoolResult<number, string> = await workerPool(new Set([1, 2]), async (item) => String(item), options);
+const result: AsyncSlotPoolResult<number, string> = await asyncSlotPool(new Set([1, 2]), async (item) => String(item), options);
+const legacyOptions: WorkerPoolOptions<number> = options;
+const legacyResult: WorkerPoolResult<number, string> = await workerPool([1], (item) => String(item), legacyOptions);
+void legacyResult;
 const value: string = result.succeeded[0].result;
 void value;
 await minified([1], (item) => item * 2, { onProgress: null, onTaskError: null });

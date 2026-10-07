@@ -51,7 +51,9 @@ npm run publish:dry
 
 `verify` builds, runs source tests and examples, checks ESM and CommonJS declarations, creates a real tarball, installs it into a temporary consumer project, runs the packaged examples, checks public exports and TypeScript resolution, and runs browser-bundler and global-script checks in Chromium. Both readable and minified builds are exercised. Temporary artifacts are removed.
 
-`pack:check` checks the exact published file allowlist and prints tarball contents and size. The package contains only its manifest, README, MIT license, six JavaScript builds with maps, two declaration files, and eight example scripts with their guide. Source maps embed source text; review it as public content. Development tooling and the development lockfile are not included.
+`pack:check` checks the exact published file allowlist and prints tarball contents and size. The package contains only its manifest, README, MIT license, six canonical JavaScript builds with maps, two canonical declaration files, compatibility copies under legacy `workerPool` filenames, and eight example scripts with their guide. Source maps embed source text; review it as public content. Development tooling and the development lockfile are not included.
+
+The canonical export is `asyncSlotPool`; legacy `workerPool` imports, type aliases, and CDN paths remain supported. Release verification checks both names across Node.js and browser formats. Validation error prefixes have changed to `asyncSlotPool:`, so review any message-matching consumers before adopting this change. Naming changes do not authorize overwriting an already published version; select an unused version before release.
 
 `publish:dry` invokes npm's publication dry run and release lifecycle checks, but uploads nothing. Verification still creates and installs a local temporary tarball: it overrides inherited dry-run settings for those local commands only. A successful dry run is not proof of authentication, name availability, or publish permission.
 
@@ -79,8 +81,8 @@ In a separate temporary consumer project, install the exact released version and
 
 ```sh
 npm install @dipanshuhandoo/async-slot-pool@1.0.1 --registry https://registry.npmjs.org/
-node --input-type=module -e "import { workerPool } from '@dipanshuhandoo/async-slot-pool'; console.log(await workerPool([1], value => value + 1))"
-node -e "const { workerPool } = require('@dipanshuhandoo/async-slot-pool'); workerPool([1], value => value + 1).then(console.log)"
+node --input-type=module -e "import { asyncSlotPool } from '@dipanshuhandoo/async-slot-pool'; console.log(await asyncSlotPool([1], value => value + 1))"
+node -e "const { asyncSlotPool } = require('@dipanshuhandoo/async-slot-pool'); asyncSlotPool([1], value => value + 1).then(console.log)"
 ```
 
 Verify the version-pinned CDN browser script after CDN propagation. Update the README's initial-release notice and example version, move changelog entries to the released version, and create a git tag/GitHub release identifying the published commit. Never publish from a different state than the one the tag describes.

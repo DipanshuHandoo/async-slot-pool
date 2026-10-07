@@ -1,6 +1,8 @@
-# Runnable Worker Pool Examples
+# Runnable Async Slot Pool Examples
 
 These examples use the public `@dipanshuhandoo/async-slot-pool` import. They require Node.js 22+, run without credentials or external services, and check their expected results with assertions.
+
+The exported function is `asyncSlotPool`. These scripts intentionally use `import { asyncSlotPool as workerPool }` so the existing local variable names stay familiar; that local alias does not change the service's canonical name. Old applications importing `workerPool` directly also remain supported.
 
 ## Run From the Repository
 
@@ -26,7 +28,7 @@ node examples/http-api.mjs
 | [retries-timeouts.mjs](retries-timeouts.mjs) | Process healthy, transiently failing, invalid, and slow jobs | Retry recovery, exponential backoff with jitter, per-attempt errors, terminal failures, and timeouts. |
 | [lazy-progress.mjs](lazy-progress.mjs) | Process generated records without materializing input | Lazy synchronous iterables, slot refilling, progress snapshots, and unknown progress totals. |
 | [bail.mjs](bail.mjs) | Stop admitting jobs after a terminal failure | Unclaimed jobs, failure reporting, and completion of already started work. |
-| [service-upload-progress.mjs](service-upload-progress.mjs) | Upload a known list through a service wrapper | Forwarded worker pool options and same-line stdout progress with `done/total`. |
+| [service-upload-progress.mjs](service-upload-progress.mjs) | Upload a known list through a service wrapper | Forwarded async slot pool options and same-line stdout progress with `done/total`. |
 | [service-lazy-progress.mjs](service-lazy-progress.mjs) | Upload discovered files with no upfront count | Unknown-total progress, success/failure counters, and a redirected-output fallback. |
 
 ## Expected Results and Adaptation
@@ -59,7 +61,7 @@ All failures are eligible for retries; this pool does not classify transient ver
 
 ### Service Wrapper With Console Progress
 
-Both service examples define a `DemoUploadService` whose `uploadFiles(relativePaths, workerPoolOptions)` method forwards the options to `workerPool`. Its arrow handler calls `this.uploadFile(relativePath)` without losing the service instance. Uploads are simulated; no files are read and no network requests are made. Replace `uploadFile` with your own service implementation.
+Both service examples define a `DemoUploadService` whose `uploadFiles(relativePaths, asyncSlotPoolOptions)` method forwards the options to `asyncSlotPool`. Its arrow handler calls `this.uploadFile(relativePath)` without losing the service instance. Uploads are simulated; no files are read and no network requests are made. Replace `uploadFile` with your own service implementation.
 
 `service-upload-progress.mjs` processes four paths and finishes with `Step 2 uploading 4/4`, followed by a summary on a new line. It uses the same calling pattern as an application service:
 

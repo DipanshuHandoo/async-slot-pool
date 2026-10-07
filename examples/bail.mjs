@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { setTimeout as delay } from 'node:timers/promises';
-import { workerPool } from '@dipanshuhandoo/async-slot-pool';
+import { asyncSlotPool as workerPool } from '@dipanshuhandoo/async-slot-pool';
 
 const jobs = [
   { id: 'invalid', ready: false },

@@ -2,21 +2,21 @@
 
 ## Goal
 
-Publish the existing worker pool as `@dipanshuhandoo/async-slot-pool`, retaining the named `workerPool` API and zero runtime dependencies. The scope was selected during implementation; npm ownership and publish permission still require verification before publishing.
+Publish the existing async slot pool as `@dipanshuhandoo/async-slot-pool`, retaining the named `asyncSlotPool` API and zero runtime dependencies. The scope was selected during implementation; npm ownership and publish permission still require verification before publishing.
 
 Support Node.js ESM and CommonJS, TypeScript, browser bundlers, and direct browser scripts. Provide readable and minified builds. Publishing will use local npm commands, not automated releases.
 
 ## Baseline Findings Before Implementation
 
 - `package.json` points to a nonexistent entry file, has an empty description, and has no working tests or build command.
-- `src/workerPool.js` implements asynchronous task scheduling, not CPU parallelism through worker threads.
-- `docs/workerPool.md` needs installed-package import examples and corrected timeout, bail, progress, and memory descriptions.
+- `src/asyncSlotPool.js` implements asynchronous task scheduling, not CPU parallelism through worker threads.
+- `docs/asyncSlotPool.md` needs installed-package import examples and corrected timeout, bail, progress, and memory descriptions.
 - `LICENSE` already contains the MIT license.
 
 ## Phase 1: Establish the Release Contract
 
 1. Verify ownership of your npm scope and registry availability of the chosen package name. Set public access explicitly.
-2. Preserve `workerPool(items, handler, options)` and its compact, index-sorted success and failure arrays. Document all eight options and callback/result types.
+2. Preserve `asyncSlotPool(items, handler, options)` and its compact, index-sorted success and failure arrays. Document all eight options and callback/result types.
 3. Define Node.js 22+ support, with tests against supported Node majors at implementation time. Browser support means modern browsers with promises, iterables, and timers.
 4. Correct the behavioral contract before advertising it:
    - Timeout rejects an attempt but does not cancel its underlying work; retries can overlap timed-out work.
@@ -31,7 +31,7 @@ Support Node.js ESM and CommonJS, TypeScript, browser bundlers, and direct brows
 Depends on Phase 1.
 
 6. Update metadata: name, description, author, MIT license, keywords, engines, repository, homepage, and issue URL. Suggested description: "Dependency-free async task pool with bounded concurrency, retries, timeouts, lazy iterable input, and progress callbacks."
-7. Use esbuild as a development dependency to produce readable and minified ESM, CommonJS, and browser IIFE builds. Browser scripts expose `AsyncSlotPool.workerPool`.
+7. Use esbuild as a development dependency to produce readable and minified ESM, CommonJS, and browser IIFE builds. Browser scripts expose `AsyncSlotPool.asyncSlotPool`.
 8. Configure explicit `exports` for the main API and a minified subpath. Set compatible `main`, `module`, and declaration entries. Keep browser bundler imports on the ESM build.
 9. Provide generic TypeScript declarations covering synchronous iterables, handlers, options, nullable progress totals, callbacks, failures, and results. Ensure CommonJS consumers receive correctly resolved declarations.
 10. Allowlist only distributable builds, declarations, README, and license in the npm tarball. Exclude tests, tooling, caches, and repository configuration. Generate source maps without leaking machine-specific paths.
@@ -61,8 +61,8 @@ Depends on successful package-consumer verification.
 Repository root: `d:\Github Personal\worker_pool`.
 
 - `package.json`: metadata, exports, distribution allowlist, scripts, and development dependencies.
-- `src/workerPool.js`: reuse `workerPool`, `validate`, `createSource`, and `withTimeout`; apply only covered contract corrections.
-- `docs/workerPool.md`: installed-package examples and accurate behavioral guarantees.
+- `src/asyncSlotPool.js`: reuse `asyncSlotPool`, `validate`, `createSource`, and `withTimeout`; apply only covered contract corrections.
+- `docs/asyncSlotPool.md`: installed-package examples and accurate behavioral guarantees.
 - Planned additions: root README and support documents; `scripts/` build and package checks; `test/` coverage; `types/` declarations; `.github/workflows/` validation; generated `dist/`.
 
 ## Release Gates

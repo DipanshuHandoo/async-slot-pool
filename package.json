@@ -8,7 +8,7 @@
     "async",
     "concurrency",
     "task-pool",
-    "worker-pool",
+    "async-slot-pool",
     "retry",
     "timeout",
     "iterable"
@@ -22,36 +22,38 @@
     "url": "git+https://github.com/DipanshuHandoo/worker_pool.git"
   },
   "type": "module",
-  "main": "./dist/workerPool.cjs",
-  "module": "./dist/workerPool.js",
-  "types": "./dist/workerPool.d.ts",
+  "main": "./dist/asyncSlotPool.cjs",
+  "module": "./dist/asyncSlotPool.js",
+  "types": "./dist/asyncSlotPool.d.ts",
   "exports": {
     ".": {
       "import": {
-        "types": "./dist/workerPool.d.ts",
-        "default": "./dist/workerPool.js"
+        "types": "./dist/asyncSlotPool.d.ts",
+        "default": "./dist/asyncSlotPool.js"
       },
       "require": {
-        "types": "./dist/workerPool.d.cts",
-        "default": "./dist/workerPool.cjs"
+        "types": "./dist/asyncSlotPool.d.cts",
+        "default": "./dist/asyncSlotPool.cjs"
       }
     },
     "./min": {
       "import": {
-        "types": "./dist/workerPool.d.ts",
-        "default": "./dist/workerPool.min.js"
+        "types": "./dist/asyncSlotPool.d.ts",
+        "default": "./dist/asyncSlotPool.min.js"
       },
       "require": {
-        "types": "./dist/workerPool.d.cts",
-        "default": "./dist/workerPool.min.cjs"
+        "types": "./dist/asyncSlotPool.d.cts",
+        "default": "./dist/asyncSlotPool.min.cjs"
       }
     },
     "./dist/workerPool.global.js": "./dist/workerPool.global.js",
     "./dist/workerPool.global.min.js": "./dist/workerPool.global.min.js",
+    "./dist/asyncSlotPool.global.js": "./dist/asyncSlotPool.global.js",
+    "./dist/asyncSlotPool.global.min.js": "./dist/asyncSlotPool.global.min.js",
     "./package.json": "./package.json"
   },
-  "unpkg": "./dist/workerPool.global.min.js",
-  "jsdelivr": "./dist/workerPool.global.min.js",
+  "unpkg": "./dist/asyncSlotPool.global.min.js",
+  "jsdelivr": "./dist/asyncSlotPool.global.min.js",
   "files": [
     "dist",
     "examples",
@@ -67,7 +69,7 @@
   },
   "scripts": {
     "build": "node scripts/build.mjs",
-    "test": "node --test test/workerPool.test.js",
+    "test": "node --test test/asyncSlotPool.test.js",
     "examples": "node scripts/run-examples.mjs",
     "test:types": "npm run build && tsc --noEmit --strict --module nodenext --target es2022 test/types/consumer.mts test/types/consumer.cts",
     "test:package": "node scripts/check-package.mjs",

@@ -1,8 +1,21 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { workerPool } from '../src/workerPool.js';
+import { asyncSlotPool, asyncSlotPool as workerPool, workerPool as legacyWorkerPool } from '../src/asyncSlotPool.js';
+import { workerPool as sourceCompatibilityAlias } from '../src/workerPool.js';
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+test('canonical asyncSlotPool retains identical legacy exports', () => {
+  assert.equal(asyncSlotPool.name, 'asyncSlotPool');
+  assert.equal(asyncSlotPool.length, 2);
+  assert.equal(legacyWorkerPool, asyncSlotPool);
+  assert.equal(sourceCompatibilityAlias, asyncSlotPool);
+});
+
+test('validation errors use the canonical asyncSlotPool prefix', async () => {
+  await assert.rejects(asyncSlotPool([1], null), /^TypeError: asyncSlotPool:/);
+  await assert.rejects(asyncSlotPool(null, () => 1), /^TypeError: asyncSlotPool:/);
+});
 
 test('bail reports progress for the terminal failure and stops new claims', async () => {
   const claimed = [];

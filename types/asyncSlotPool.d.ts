@@ -14,7 +14,7 @@ export interface TaskError<T> {
   willRetry: boolean;
 }
 
-export interface WorkerPoolOptions<T> {
+export interface AsyncSlotPoolOptions<T> {
   concurrency?: number;
   timeout?: number;
   retries?: number;
@@ -46,14 +46,18 @@ export interface PoolStats {
   durationMs: number;
 }
 
-export interface WorkerPoolResult<T, R> {
+export interface AsyncSlotPoolResult<T, R> {
   succeeded: Array<TaskSuccess<T, R>>;
   failed: Array<TaskFailure<T>>;
   stats: PoolStats;
 }
 
-export declare function workerPool<T, R>(
+export declare function asyncSlotPool<T, R>(
   items: Iterable<T>,
   handler: (item: T, index: number) => R | PromiseLike<R>,
-  options?: WorkerPoolOptions<T>,
-): Promise<WorkerPoolResult<T, Awaited<R>>>;
+  options?: AsyncSlotPoolOptions<T>,
+): Promise<AsyncSlotPoolResult<T, Awaited<R>>>;
+
+export { asyncSlotPool as workerPool };
+export type WorkerPoolOptions<T> = AsyncSlotPoolOptions<T>;
+export type WorkerPoolResult<T, R> = AsyncSlotPoolResult<T, R>;

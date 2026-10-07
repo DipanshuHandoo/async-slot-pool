@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { mkdir, mkdtemp, readFile, readdir, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
-import { workerPool } from '@dipanshuhandoo/async-slot-pool';
+import { asyncSlotPool as workerPool } from '@dipanshuhandoo/async-slot-pool';
 
 const temporary = await mkdtemp(path.join(tmpdir(), 'slot-pool-example-'));
 const inputDirectory = path.join(temporary, 'input');

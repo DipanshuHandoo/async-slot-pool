@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { once } from 'node:events';
 import { createServer } from 'node:http';
 import { setTimeout as delay } from 'node:timers/promises';
-import { workerPool } from '@dipanshuhandoo/async-slot-pool';
+import { asyncSlotPool as workerPool } from '@dipanshuhandoo/async-slot-pool';
 
 const server = createServer(async (request, response) => {
   const match = /^\/products\/(\d+)$/.exec(request.url ?? '');
